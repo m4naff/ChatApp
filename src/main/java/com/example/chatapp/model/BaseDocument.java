@@ -1,4 +1,14 @@
 package com.example.chatapp.model;
 
-public class BaseDocument {
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+
+/**
+ * Base MongoDB document for all other document classes.
+ */
+@Data
+public abstract class BaseDocument {
+
+    @Id
+    private String id;
 }
