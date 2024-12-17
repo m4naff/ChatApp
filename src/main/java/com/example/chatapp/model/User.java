@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Document(collation = "users")
+@Document(collection = "users")
 public class User extends BaseDocument {
 
     @NotBlank
