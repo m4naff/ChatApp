@@ -1,5 +1,7 @@
 package com.example.chatapp.config;
 
+import com.example.chatapp.auth.UserPrincipal;
+import com.example.chatapp.auth.jwt.JwtAuthenticationConverter;
 import com.example.chatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,10 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.web.server.WebFilter;
-
-import java.nio.file.attribute.UserPrincipal;
 
 /**
  * Configuration class for Spring Security.
@@ -47,8 +50,17 @@ public class SecurityConfiguration {
                 .map(UserPrincipal::new);
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     private WebFilter jwtAuthenticationFilter() {
         var authenticationManager = new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService());
+        authenticationManager.setPasswordEncoder(passwordEncoder());
+
+        var jwtAuthenticationFilter = new AuthenticationWebFilter(authenticationManager);
+        jwtAuthenticationFilter.setServerAuthenticationConverter(new JwtAuthenticationConverter());
     }
 
 }
