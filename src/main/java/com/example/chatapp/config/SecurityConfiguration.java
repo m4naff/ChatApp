@@ -2,6 +2,7 @@ package com.example.chatapp.config;
 
 import com.example.chatapp.auth.UserPrincipal;
 import com.example.chatapp.auth.jwt.JwtAuthenticationConverter;
+import com.example.chatapp.auth.jwt.JwtAuthenticationSuccessHandler;
 import com.example.chatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,7 @@ public class SecurityConfiguration {
 
         var jwtAuthenticationFilter = new AuthenticationWebFilter(authenticationManager);
         jwtAuthenticationFilter.setServerAuthenticationConverter(new JwtAuthenticationConverter());
+        jwtAuthenticationFilter.setAuthenticationSuccessHandler(new JwtAuthenticationSuccessHandler());
     }
 
 }
