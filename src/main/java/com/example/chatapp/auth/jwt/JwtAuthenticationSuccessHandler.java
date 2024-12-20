@@ -1,5 +1,6 @@
 package com.example.chatapp.auth.jwt;
 
+import com.example.chatapp.utils.JwtUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
