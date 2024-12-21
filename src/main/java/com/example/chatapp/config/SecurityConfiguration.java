@@ -3,6 +3,7 @@ package com.example.chatapp.config;
 import com.example.chatapp.auth.UserPrincipal;
 import com.example.chatapp.auth.jwt.JwtAuthenticationConverter;
 import com.example.chatapp.auth.jwt.JwtAuthenticationSuccessHandler;
+import com.example.chatapp.auth.jwt.JwtAuthorizationManager;
 import com.example.chatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.WebFilter;
 
 /**
@@ -63,6 +65,14 @@ public class SecurityConfiguration {
         var jwtAuthenticationFilter = new AuthenticationWebFilter(authenticationManager);
         jwtAuthenticationFilter.setServerAuthenticationConverter(new JwtAuthenticationConverter());
         jwtAuthenticationFilter.setAuthenticationSuccessHandler(new JwtAuthenticationSuccessHandler());
+        jwtAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.anyExchange());
+
+        return jwtAuthenticationFilter;
+    }
+
+    private WebFilter jwtAuthorizationFilter() {
+        var jwtAuthorizationFilter = new AuthenticationWebFilter(new JwtAuthorizationManager(userDetailsService()));
+
     }
 
 }
