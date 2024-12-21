@@ -65,14 +65,17 @@ public class SecurityConfiguration {
         var jwtAuthenticationFilter = new AuthenticationWebFilter(authenticationManager);
         jwtAuthenticationFilter.setServerAuthenticationConverter(new JwtAuthenticationConverter());
         jwtAuthenticationFilter.setAuthenticationSuccessHandler(new JwtAuthenticationSuccessHandler());
-        jwtAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.anyExchange());
+        jwtAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/auth/signin"));
 
         return jwtAuthenticationFilter;
     }
 
     private WebFilter jwtAuthorizationFilter() {
         var jwtAuthorizationFilter = new AuthenticationWebFilter(new JwtAuthorizationManager(userDetailsService()));
+        jwtAuthorizationFilter.setServerAuthenticationConverter(new JwtAuthenticationConverter());
+        jwtAuthorizationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.anyExchange());
 
+        return jwtAuthorizationFilter;
     }
 
 }
