@@ -7,6 +7,7 @@ import com.example.chatapp.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,6 +39,12 @@ public class ChatService {
                 .doOnNext(principal -> members.add(principal.user()))
                 .doOnNext(principal -> chat.setMembers(members))
                 .flatMap(principal -> chatRepository.save(chat));
+    }
+
+    @PreAuthorize("@webSecurity.hasChatAuthority(authentication, #chatId)" +
+    "and @webSecurity.removeChatAuthority(authentication, #chatId)")
+    public Mono<Void> deleteChat(String chatId) {
+        return chatRepository.deleteById(chatId);
     }
 
 

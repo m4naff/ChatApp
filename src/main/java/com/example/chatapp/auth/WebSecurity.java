@@ -49,7 +49,4 @@ public class WebSecurity {
 
         return user.getId().equals(message.getSender().getId());
     }
-
-
-
 }
