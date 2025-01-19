@@ -1,6 +1,7 @@
 package com.example.chatapp.auth;
 
 import com.example.chatapp.model.Chat;
+import com.example.chatapp.model.Message;
 import com.example.chatapp.model.User;
 import com.example.chatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,13 @@ public class WebSecurity {
         }
 
         return true;
+    }
+
+    public boolean isMessageSender(Authentication authentication, Message message) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.user();
+
+        return user.getId().equals(message.getSender().getId());
     }
 
 
