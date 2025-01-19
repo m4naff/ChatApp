@@ -1,5 +1,7 @@
 package com.example.chatapp.auth;
 
+import com.example.chatapp.model.Chat;
+import com.example.chatapp.model.User;
 import com.example.chatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,5 +20,28 @@ public class WebSecurity {
     public boolean hasChatAuthority(Authentication authentication, String chatId) {
         return authentication.getAuthorities().contains(new ChatAuthority(chatId));
     }
+
+    public boolean addChatAuthority(Authentication authentication, Chat chat) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.user();
+
+        user.addAuthority(new ChatAuthority(chat.getId()));
+        userRepository.save(user).subscribe();
+
+        return true;
+    }
+
+    public boolean removeChatAuthority(Authentication authentication, String chatId) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.user();
+
+        if (user.removeAuthority(new ChatAuthority(chatId))) {
+            userRepository.save(user).subscribe();
+        }
+
+        return true;
+    }
+
+
 
 }
